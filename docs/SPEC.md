@@ -202,7 +202,7 @@ System prompt includes persona, tool schemas, safety rules, and a short world pr
 | Milestone | Deliverable | Exit criteria |
 | --- | --- | --- |
 | **M0 — Spec & skeleton** | README, LICENSE, SPEC, CONTRIBUTING, .gitignore on GitHub | Done |
-| **M1 — Scaffold** *(landed on main)* | Mod C++ skeleton + Python brain/mock + PS1 scripts; follow/hold stubs; loopback bridge contract | Docs decisions locked; brain tests green; mod **not** yet compiled in Starter Project; GHA workflow pending `workflow` OAuth scope |
+| **M1 — Scaffold** *(landed on main)* | Mod C++ skeleton + Python brain/mock + PS1 scripts; follow/hold stubs; loopback bridge contract | Docs decisions locked; brain tests green; mod **not** yet compiled in Starter Project; GHA CI present |
 | **M2 — Chat loop** | Chat in ↔ brain ↔ chat out; persona locked; provider-agnostic brain stub | AC-3.* with a local model |
 | **M3 — Mine & miner** | `mine` + `build_miner` tools; safety confirms; ficsit.app prerelease | AC-4.*, AC-5.*; tagged prerelease on SMR |
 

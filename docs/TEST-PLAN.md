@@ -132,8 +132,8 @@ Print / tick on a Windows listen-host session with brain running.
 
 | Job | Command | Status |
 | --- | --- | --- |
-| Brain lint/test | `scripts/Run-Tests.ps1` → ruff + pytest | Local green; GHA yaml ready but **not pushed** (OAuth lacks `workflow` scope) |
+| Brain lint/test | `scripts/Run-Tests.ps1` → ruff + pytest | Local green; **GHA on main** (`.github/workflows/ci.yml`) |
 | Mod compile | Alpakit in Starter Project | Blocked on Jack's Windows PC |
 | Live LLM eval | Ollama + `INTERN_LIVE_EVAL=1` | Optional later |
 
-Restore workflow from `shared/jack/unpaid-intern-ci/ci.yml` or untracked `.github/workflows/ci.yml` once workflow scope exists.
+Workflow lives at `.github/workflows/ci.yml` on main.
