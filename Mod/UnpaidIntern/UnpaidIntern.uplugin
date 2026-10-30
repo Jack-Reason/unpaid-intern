@@ -2,8 +2,9 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "0.1.0-m1",
+	"SemVersion": "0.1.0-m1",
 	"FriendlyName": "Unpaid Intern",
-	"Description": "FICSIT's expendable LLM-powered pioneer companion. Spawns beside you, follows orders, chats in character.",
+	"Description": "Client-side driver: LLM brain steers THIS client's pioneer (second licence) via Enhanced Input / build gun. Jack's game needs no mod (RequiredOnRemote false).",
 	"Category": "Modding",
 	"CreatedBy": "Jack Reason",
 	"CreatedByURL": "https://github.com/Jack-Reason/unpaid-intern",
@@ -14,6 +15,7 @@
 	"IsBetaVersion": true,
 	"IsExperimentalVersion": true,
 	"Installed": false,
+	"RequiredOnRemote": false,
 	"Plugins": [
 		{
 			"Name": "SML",
@@ -27,5 +29,6 @@
 			"Type": "Runtime",
 			"LoadingPhase": "PostDefault"
 		}
-	]
+	],
+	"GameVersion": ">=491125"
 }

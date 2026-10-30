@@ -1,6 +1,6 @@
 # unpaid-intern — Reuse catalogue
 
-**Last updated:** 2026-10-30 (Australia/Sydney)  
+**Last updated:** 2026-10-30 (Australia/Sydney) — ADR-0006 second-licence driver  
 **How to read risk:** Low = copy patterns / depend via SMM; Medium = optional soft-dep or licence watch; High = licence clash, unmaintained, or deep engine fork.
 
 Licences verified via GitHub API / ficsit.app where noted. **Always re-check before shipping a binary dependency.**
@@ -12,6 +12,10 @@ Licences verified via GitHub API / ficsit.app where noted. **Always re-check bef
 | Component | What we reuse | Licence | Maintained for 1.x / SML 3.x? | Risk | Link |
 | --- | --- | --- | --- | --- | --- |
 | **SatisfactoryModLoader** | Chat commands, mod subsystems, RCOs, replication guidance, Alpakit, ExampleMod | GPL-3.0 | Yes — **3.12.0** for CL 491125 (2026-06-06); repo active 2026-10 | Low (required platform) | [GitHub](https://github.com/satisfactorymodding/SatisfactoryModLoader) · [docs chat](https://docs.ficsit.app/satisfactory-modding/latest/Development/ModLoader/ChatCommands.html) · [MP/RCO](https://docs.ficsit.app/satisfactory-modding/latest/Development/Satisfactory/Multiplayer.html) |
+| **SML client-only / RequiredOnRemote** | `"RequiredOnRemote": false` so Jack needs no mod; SML 3.8+ client-only vs vanilla host | (SML docs) | Yes (3.8 / 3.9 checks) | Low | [ReleaseMod Special Fields](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/ReleaseMod.html) · [3.7→3.8](https://docs.ficsit.app/satisfactory-modding/latest/Development/UpdatingFromSml37.html) |
+| **Enhanced Input + AFGPlayerController** | Drive local pioneer (move/look/interact) via game input actions | Epic / FG | CSS UE 5.6.1 | Medium — pin symbols in Starter Project | Engine EnhancedInput · FG player controller |
+| **AFGBuildGun / holograms** | Programmatic build-gun state + placement | FG | 1.2 | Medium — reverse carefully | FactoryGame headers in Starter Project |
+| **Dual-client testing** | Quick Launch `-multiplayer`, Steam+Epic | SML docs | Yes | Low | [TestingResources](https://docs.ficsit.app/satisfactory-modding/latest/Development/TestingResources.html) |
 | **satisfactorymodding/Documentation** | Canonical patterns | Content on docs.ficsit.app | Yes | Low | [GitHub](https://github.com/satisfactorymodding/Documentation) |
 | **SML ExampleMod / FeatureTests** | Hybrid BP/C++ module layout, chat, replication samples | GPL-3.0 (SML tree) | Yes | Low — study, don't vendor blindly | [SML](https://github.com/satisfactorymodding/SatisfactoryModLoader) · [SMLFeatureTests](https://github.com/satisfactorymodding/SMLFeatureTests) |
 | **Ficsit Remote Monitoring (FRM)** | **Patterns**: HTTP+WS localhost, auth token, `sendChatMessage` / factory queries; optionally soft-depend later for sensors | **No SPDX licence on GitHub** (porisius/FicsitRemoteMonitoring) as of 2026-10-30 | Yes — rewritten for 1.2 FGUserSettings; active 2026-10-26 | **Medium–High** for code copy (unclear licence); **Low** for API-shape inspiration | [GitHub](https://github.com/porisius/FicsitRemoteMonitoring) · [HTTP](https://docs.ficsit.app/ficsitremotemonitoring/latest/webserver.html) · [WS](https://docs.ficsit.app/ficsitremotemonitoring/latest/websockets.html) · [Open Source Examples](https://docs.ficsit.app/satisfactory-modding/latest/Development/OpenSourceExamples.html) |
@@ -42,10 +46,11 @@ Licences verified via GitHub API / ficsit.app where noted. **Always re-check bef
 1. **SML 3.12 APIs** — chat commands, subsystems, RCO vs replicated subsystem split. Non-negotiable.
 2. **FRM behavioural patterns** (not vendored source until licence clarified) — loopback HTTP/WS, auth token, chat send, JSON sensors.
 3. **Spawn Mob With Websocket / ALWebsocketLib** — proof that external agents can drive in-world actors; use as design reference for our tighter HTTP tool protocol.
-4. **HostileScaling (MIT)** — modern SML 3.12 creature/subsystem hook examples.
-5. **Ollama tool calling** — default brain backend on Windows.
-6. **Mindcraft / Voyager (lessons)** — tool allow-lists, observation grounding, skill library later; reject free-form code execution against the game.
-7. **satisfactory-docs-parser (MIT)** — miner recipe / item class names for `build_miner` validation offline.
+4. **HostileScaling (MIT)** — modern SML 3.12 subsystem hook examples (reference only; body is no longer a creature pawn).
+5. **Enhanced Input + AFGBuildGun** — driver actuation path (ADR-0006).
+6. **Ollama tool calling** — default brain backend on Windows.
+7. **Mindcraft / Voyager (lessons)** — tool allow-lists, observation grounding, skill library later; reject free-form code execution against the game.
+8. **satisfactory-docs-parser (MIT)** — miner recipe / item class names for `build_miner` validation offline.
 
 ## Explicit non-picks
 
@@ -53,8 +58,10 @@ Licences verified via GitHub API / ficsit.app where noted. **Always re-check bef
 | --- | --- |
 | FicsIt-Networks as the brain | GPL coupling + in-game Lua VM is the wrong process boundary (ADR-0001) |
 | Copying FRM sources verbatim | Licence not declared on GitHub — ask author or reimplement |
-| Second Steam/Epic client | Violates "sanctioned mod path" / SPEC non-goals |
+| Spawned AIController pawn as the product body | Superseded by ADR-0006 (kept only as historical research) |
+| Pure screen-capture + OS key injection | Fragile; worse ToS optics; no hologram state |
 | Voyager-style arbitrary code exec | Catastrophic griefing surface in a physics sandbox |
+| Sharing one Epic/Steam login across two clients | Epic ToS: do not share credentials; buy a second licence |
 
 ---
 

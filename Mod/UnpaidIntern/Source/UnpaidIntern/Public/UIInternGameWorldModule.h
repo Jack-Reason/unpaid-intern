@@ -2,9 +2,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-// TODO(M1): #include "Module/GameWorldModule.h" and subclass UGameWorldModule once Starter Project headers resolve.
-// Suggested asset name: RootGameWorld_UnpaidIntern (mark Root Module).
-// Register chat commands on MChatCommands; spawn/bridge owned by UUIInternSubsystem.
+// TODO(M2): #include "Module/GameWorldModule.h" and subclass UGameWorldModule.
+// Suggested asset: RootGameWorld_UnpaidIntern (Root Module).
+// Register chat commands; driver lives in UUIInternSubsystem (client).
 #include "UIInternGameWorldModule.generated.h"
 
 UCLASS()

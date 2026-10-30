@@ -2,14 +2,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-// TODO(M1): Include SML/ChatCommand/ChatCommandInstance.h from Starter Project and subclass AChatCommandInstance.
+// TODO(M2): Include SML ChatCommandInstance.h and subclass AChatCommandInstance.
 // Docs: https://docs.ficsit.app/satisfactory-modding/latest/Development/ModLoader/ChatCommands.html
 //
-// Until the Starter Project is wired, this header documents the intended registration:
 //   Command Name: intern
 //   Aliases: unpaid, ui
-//   Usage: /intern <spawn|despawn|follow|hold|mine|listen> …
-//   Register on RootGameWorld_UnpaidIntern M Chat Commands array (Blueprint or C++ GameWorldModule).
+//   Usage: /intern <follow|hold|mine|listen|status> …
+//   Note: spawn/despawn removed — intern IS the local pioneer (ADR-0006).
+//   Also: UIChatListener reads Jack's normal chat for orders.
 
 #include "UIInternChatCommand.generated.h"
 

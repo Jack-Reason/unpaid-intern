@@ -2,20 +2,26 @@
 
 > FICSIT's newest expendable employee. Eager. Legally a contractor. Will mine that node if you ask nicely (or not-so-nicely).
 
-**unpaid-intern** is an open-source, LLM-powered companion for [Satisfactory](https://www.satisfactorygame.com/): a second pioneer with a body who joins your session, chats with you in-character, follows orders, and occasionally suggests a less daft plan.
+**unpaid-intern** is an open-source, LLM-powered companion for [Satisfactory](https://www.satisfactorygame.com/): a **real second pioneer** on a **second game licence** who joins your private session like a friend, chats in character, follows orders, and occasionally suggests a less daft plan.
 
-**Status:** M1 scaffold — Python brain + mock bridge are runnable and tested. The SML mod is a **source skeleton only** (not compiled; needs the Starter Project on a Windows PC).
+**Status:** M1 scaffold — Python brain + mock bridge are runnable and tested. The SML mod is a **client-side driver skeleton** (not compiled; needs the Starter Project on a Windows PC). Architecture: [ADR-0006](docs/adr/0006-second-licence-client-driver.md) (supersedes spawned-pawn ADR-0002).
 
 **Primary platform:** Windows 10/11.
 
 ## Sanctioned path (no piracy, no client cracks)
 
-Community stack only: [SML](https://ficsit.app/mod/SML) + [Satisfactory Mod Manager](https://smm.ficsit.app/) + [ficsit.app](https://ficsit.app). Coffee Stain does not ship first-party mod tools but heavily endorses this ecosystem ([wiki](https://satisfactory.wiki.gg/wiki/Modding)). The intern is a **mod-spawned character** inside your session — not a second Steam/Epic client.
+| Piece | Who installs it |
+| --- | --- |
+| Satisfactory (paid) | **Jack** and **intern** — two licences / accounts |
+| [SML](https://ficsit.app/mod/SML) + [Mod Manager](https://smm.ficsit.app/) + UnpaidIntern | **Intern client only** (`RequiredOnRemote: false`) |
+| Jack's client | **Vanilla** — no UnpaidIntern |
+
+Coffee Stain endorses the community SML/ficsit.app ecosystem ([wiki](https://satisfactory.wiki.gg/wiki/Modding)). The driver injects **PlayerController / Enhanced Input / build-gun** on the intern's own pioneer — not screen scraping.
 
 | Piece | Version |
 | --- | --- |
 | Satisfactory | **1.2** (CL ≥ 491125) |
-| SML | **3.12.0** |
+| SML | **3.12.0** (intern) |
 | Engine (modding) | Custom **UE 5.6.1** (CSS + community) |
 | Audio | **Wwise 2025.1.6.x** |
 
@@ -23,14 +29,14 @@ Community stack only: [SML](https://ficsit.app/mod/SML) + [Satisfactory Mod Mana
 
 ```mermaid
 flowchart LR
-  Player["Player<br/>(in-game chat)"]
-  Mod["SML Mod<br/>UnpaidIntern<br/>(body + sensors + actuators)"]
-  Bridge["Local Bridge<br/>127.0.0.1 only"]
-  Brain["LLM Brain<br/>Ollama default / BYO OpenAI-compat"]
+  JackGame["Jack's Satisfactory\n(no mod)"]
+  InternGame["Intern's Satisfactory\n+ SML + driver mod"]
+  Bridge["Loopback bridge\n127.0.0.1"]
+  Brain["LLM Brain"]
 
-  Player <-->|"chat / orders"| Mod
-  Mod <-->|"/observe /action"| Bridge
-  Bridge <-->|"tool calls"| Brain
+  JackGame <-->|"multiplayer session"| InternGame
+  InternGame <-->|"/observe /action"| Bridge
+  Bridge <--> Brain
 ```
 
 ## Quickstart (Windows PowerShell) — brain only
@@ -42,8 +48,6 @@ cd path\to\unpaid-intern
 .\scripts\Run-Brain.ps1 -Mode mock
 ```
 
-Environment (optional cloud):
-
 ```powershell
 $env:INTERN_LLM_PROVIDER = "openai"   # default is ollama
 $env:OPENAI_API_KEY = "sk-..."
@@ -51,37 +55,38 @@ $env:OPENAI_BASE_URL = "https://api.openai.com/v1"
 $env:OPENAI_MODEL = "gpt-4o-mini"
 ```
 
-Against a future live mod bridge: `.\scripts\Run-Brain.ps1 -Mode loop -Bridge http://127.0.0.1:8765`
+Against a future live driver bridge (on the **intern** machine): `.\scripts\Run-Brain.ps1 -Mode loop -Bridge http://127.0.0.1:8765`
 
 ## Repo layout
 
 ```
 unpaid-intern/
-├── Mod/UnpaidIntern/     # SML plugin skeleton (NOT compiled yet)
+├── Mod/UnpaidIntern/     # Client-side driver skeleton (NOT compiled yet)
 ├── brain/                # Python 3.11+ brain + mock game + tests
 ├── scripts/*.ps1         # Windows setup / run / test
-├── docs/                  # SPEC, ARCHITECTURE, REUSE, TEST-PLAN, ADRs
-├── scripts/Run-Tests.ps1  # local ruff + pytest
+├── docs/                 # SPEC, ARCHITECTURE, REUSE, TEST-PLAN, ADRs
 └── .github/workflows/ci.yml
 ```
 
 ## MVP scope
 
-Spawn beside player → follow → chat in character → mine nodes → build miners (materials from **intern inventory**; command-only chat by default). Full acceptance criteria: [`docs/SPEC.md`](docs/SPEC.md). Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · Reuse: [`docs/REUSE.md`](docs/REUSE.md) · Tests: [`docs/TEST-PLAN.md`](docs/TEST-PLAN.md).
+Second licence joins Jack → follow (input drive) → chat in character → mine nodes → build miners via build gun (materials from **intern inventory**). Full acceptance: [`docs/SPEC.md`](docs/SPEC.md).
 
 ## Milestones
 
 | ID | Goal | State |
 | --- | --- | --- |
 | M0 | Spec & licence on GitHub | Done |
-| M1 | Scaffold: mod skeleton + brain/mock + tests | Done on main (+ GHA) |
-| M2 | Chat loop with live persona against local model | Next (needs compiled mod or richer mock) |
+| M1 | Scaffold: driver skeleton + brain/mock + tests | Done on main (+ GHA) |
+| M2 | Join Jack + chat loop with live persona | Next (needs compiled mod + second licence) |
 | M3 | Mine + build_miner end-to-end; ficsit.app prerelease | Later |
 
-## Compiling the mod (Jack's Windows PC)
+## Compiling the driver (Jack's Windows PC)
 
-See [`Mod/UnpaidIntern/README.md`](Mod/UnpaidIntern/README.md). Short version: install VS 2022 + CSS UE 5.6.1 + Wwise → clone Starter Project for SML 3.12 → copy `Mod/UnpaidIntern` into `Mods/` → Generate VS project → Development Editor → Blueprint GameWorldModule + `/intern` chat command → Alpakit.
+See [`Mod/UnpaidIntern/README.md`](Mod/UnpaidIntern/README.md). Install VS 2022 + CSS UE 5.6.1 + Wwise → Starter Project for SML 3.12 → copy mod → Alpakit for **Windows client** (intern). Confirm `RequiredOnRemote: false` in the uplugin.
 
 ## Licence
 
 [MIT](LICENSE) © 2026 Jack Reason. Unofficial; Satisfactory © Coffee Stain / Krafton.
+
+**ToS note:** driving a pioneer with a client-side automation mod touches Steam/Epic automation language — see [ADR-0006](docs/adr/0006-second-licence-client-driver.md). Private session + second paid licence; Jack accepts residual risk.

@@ -1,41 +1,48 @@
-# UnpaidIntern (SML mod)
+# UnpaidIntern (SML client-side driver)
 
-Scaffold for the in-game body + loopback bridge.
+Scaffold for the **intern client's** input driver + loopback bridge.  
+**Jack's game does not install this mod** (`RequiredOnRemote: false` — see [ADR-0006](../../docs/adr/0006-second-licence-client-driver.md)).
 
 ## Status
 
-**Not compiled.** These sources are a structural skeleton aligned with SML 3.12 / Satisfactory 1.2 docs. They will not build until copied into the [Satisfactory Modding Starter Project](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/StarterProject/ObtainStarterProject.html) and opened with the custom CSS Unreal Engine.
+**Not compiled.** Structural skeleton for SML 3.12 / Satisfactory 1.2. Copy into the [Starter Project](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/StarterProject/ObtainStarterProject.html) on Windows.
 
 ## Layout
 
 ```
 UnpaidIntern/
-├── UnpaidIntern.uplugin
+├── UnpaidIntern.uplugin          # RequiredOnRemote: false
 └── Source/UnpaidIntern/
     ├── UnpaidIntern.Build.cs
-    ├── Public/   UIIntern*.h
-    └── Private/  UIIntern*.cpp
+    ├── Public/
+    │   ├── UIInternSubsystem.h   # client hub (no pawn spawn)
+    │   ├── UIInputDriver.h       # Enhanced Input inject
+    │   ├── UIBuildGunController.h
+    │   ├── UIObservationBuilder.h
+    │   ├── UIChatListener.h      # Jack's orders → brain; replies via chat
+    │   ├── UIInternBridge.h
+    │   └── …
+    └── Private/ …
 ```
 
-## Intended runtime behaviour
+## Runtime pieces
 
 | Piece | Class | Notes |
 | --- | --- | --- |
-| Module | `FUnpaidInternModule` | Standard `IMPLEMENT_MODULE` |
-| Settings | `UUIInternSettings` | Port 8765, follow distance, chat mode, `bFreePlacement` (dev only) |
-| Body | `AUIInternCharacter` | Follow / hold / goto stubs |
-| Subsystem | `UUIInternSubsystem` | Spawn beside host; dispatch `follow`,`goto`,`say`,`mine`,`build_miner` |
-| Bridge | `UUIInternBridge` | **Stub** — must bind `127.0.0.1` only when implemented |
-| Chat | `/intern …` | Register via `AChatCommandInstance` on Game World Module (TODO) |
+| Subsystem | `UUIInternSubsystem` | Client-only; ticks input driver; dispatches actions |
+| Input | `UUIInputDriver` | follow / hold / goto via movement input → Enhanced Input later |
+| Build gun | `UUIBuildGunController` | `AFGBuildGun` hologram placement (stub) |
+| Observe | `UUIObservationBuilder` | local state → JSON |
+| Chat | `UUIChatListener` | inbox + reply as this pioneer |
+| Bridge | `UUIInternBridge` | **Stub** — bind `127.0.0.1` only when implemented |
 
-## Compile on Windows (Jack's PC)
+## Compile on Windows (intern PC)
 
-1. Install VS 2022, custom UE 5.6.1 (CSS), Wwise 2025.1.6.x per [Required Software](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/dependencies.html).
-2. Obtain the Starter Project (git clone of SatisfactoryModLoader repo tagged for SML 3.12).
-3. Copy this folder to `StarterProject/Mods/UnpaidIntern/` (or Alpakit Create Mod then merge sources).
-4. Right-click `FactoryGame.uproject` → Generate Visual Studio project files.
-5. Build **Development Editor**, open editor, create Blueprint `RootGameWorld_UnpaidIntern` (parent `GameWorldModule`, Root Module checked).
-6. Create Blueprint chat command child of `AChatCommandInstance` (`intern`), wire `Execute Command` → `UUIInternSubsystem::HandleInternChatCommand`.
-7. Alpakit package for Windows client; install via Satisfactory Mod Manager profile.
+1. VS 2022, CSS UE 5.6.1, Wwise per [Required Software](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/dependencies.html).
+2. Starter Project for SML 3.12.
+3. Copy to `Mods/UnpaidIntern/`.
+4. Generate VS project → Development Editor → Blueprint GameWorldModule + `/intern` chat command.
+5. Alpakit **Windows client** only for MVP; install via SMM on the **intern** profile.
+6. Confirm uplugin has `"RequiredOnRemote": false` so Jack's vanilla host accepts the join ([docs](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/ReleaseMod.html)).
 
-Materials for `build_miner` come from the **intern's inventory**. Set `bFreePlacement=true` only while developing.
+Materials for `build_miner` come from the **intern pioneer's inventory**. `bFreePlacement` is dev-only.
