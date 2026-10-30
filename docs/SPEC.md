@@ -2,7 +2,8 @@
 
 **Last updated:** 2026-10-30 (Australia/Sydney)  
 **Status:** living draft  
-**Game target:** Satisfactory **1.2** (CL ≥ 491125) + **SML 3.12.0**
+**Game target:** Satisfactory **1.2** (CL ≥ 491125) + **SML 3.12.0**  
+**Primary platform:** Windows 10/11 (PowerShell scripts, Windows paths). Linux dedicated server is nice-to-have only.
 
 ---
 
@@ -54,7 +55,7 @@ Chosen MVP: *spawns beside player, follows, chats in character, mines nodes, bui
 
 | # | Acceptance criterion |
 | --- | --- |
-| AC-3.1 | Messages addressed to the intern (prefix `@intern` / `/intern` / configurable wake word, **or** all chat when "always listen" is on) are forwarded to the brain. |
+| AC-3.1 | Default **command-only**: `/intern …` (and aliases) forward to the brain. Toggle enables always-listen for all player chat. |
 | AC-3.2 | Replies appear in in-game chat under the intern's display name (SML supports scripted chat; FRM's [`sendChatMessage`](https://docs.ficsit.app/ficsitremotemonitoring/latest/json/Write/sendChatMessage.html) is a proven pattern). |
 | AC-3.3 | Persona stays on-brand; the brain refuses out-of-character jailbreaks without breaking immersion ("HR says I can't discuss that, pioneer"). |
 | AC-3.4 | Latency target: first token of reply planning < 3 s on a local mid-tier model; hard timeout with a canned "radio static" line. |
@@ -77,7 +78,7 @@ Chosen MVP: *spawns beside player, follows, chats in character, mines nodes, bui
 | # | Acceptance criterion |
 | --- | --- |
 | AC-5.1 | `build_miner` selects a valid empty node (nearest or specified) and places a miner using **the host's** unlocked recipes / build gun rules as closely as the API allows. |
-| AC-5.2 | Consumes the correct materials from a configured source (host inventory **or** intern inventory — **open decision**, see §8). |
+| AC-5.2 | Consumes the correct materials from the **intern's own inventory** (dev-only free-placement flag may skip costs). |
 | AC-5.3 | Fails loudly in chat if materials, unlocks, or clearance are missing (no silent no-op). |
 | AC-5.4 | Destructive overwrite of an existing building requires explicit confirm (see Safety). |
 
@@ -185,23 +186,22 @@ System prompt includes persona, tool schemas, safety rules, and a short world pr
 2. **Build authority & materials** — Who pays for the miner (host inventory vs intern)? Build gun hologram validation may not expose cleanly. Mitigate: MVP can "cheat" place via mod API with an explicit config flag, then tighten to vanilla rules.
 3. **Chat addressing UX** — Satisfactory chat is flat; without a reliable mention system, the brain may over-hear or miss orders. Mitigate: hard `/intern …` command channel for orders + optional free-chat persona mode.
 
-### Open questions for Jack
+### Decisions (Jack, 2026-10-30)
 
-See also the shortlist in the README handoff; expand here as decisions land.
-
-| ID | Question | Options |
-| --- | --- | --- |
-| Q1 | Materials source for `build_miner`? | A) Host inventory B) Intern inventory C) Creative/cheat place (dev only) |
-| Q2 | Always-listen chat vs `@intern` / `/intern` only? | A) Commands only (safer) B) Always listen C) Toggle |
-| Q3 | Default brain for first public build? | A) Local-only (Ollama) B) BYO cloud key C) Both with local default |
-| Q4 | Multiplayer ambition after MVP? | A) Listen-host only B) Dedicated server with replicated intern C) Per-client private intern |
+| ID | Decision |
+| --- | --- |
+| D1 | **Materials** for `build_miner` come from the **intern's own inventory**. A **dev-only** `bFreePlacement` / free-placement flag may skip costs in local builds and must never ship enabled on ficsit.app. |
+| D2 | **Chat mode** is a **toggle**: `/intern` command-only (**default**) ↔ always-listen. |
+| D3 | **Brain** is provider-agnostic: **Ollama local default**, plus BYO OpenAI-compatible cloud via `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL` (`INTERN_LLM_PROVIDER=openai`). |
+| D4 | **Primary OS:** Windows 10/11 (PowerShell under `scripts/`, Windows paths). Linux dedicated server remains nice-to-have, not MVP-blocking. |
+| D5 | Multiplayer beyond listen-host / single-player still deferred (was Q4) — revisit after M3. |
 
 ## 9. Milestones
 
 | Milestone | Deliverable | Exit criteria |
 | --- | --- | --- |
-| **M0 — Spec & skeleton** *(this commit)* | README, LICENSE, SPEC, CONTRIBUTING, .gitignore on GitHub | Repo public; docs reviewed by Jack |
-| **M1 — Body & follow** | SML mod spawns pawn; follow/hold; localhost heartbeat to bridge | AC-1.*, AC-2.* in SP |
+| **M0 — Spec & skeleton** | README, LICENSE, SPEC, CONTRIBUTING, .gitignore on GitHub | Done |
+| **M1 — Scaffold** *(in progress)* | Mod C++ skeleton + Python brain/mock + PS1 scripts + CI; follow/hold stubs; loopback bridge contract | Docs decisions locked; brain tests green; mod **not** yet compiled in Starter Project |
 | **M2 — Chat loop** | Chat in ↔ brain ↔ chat out; persona locked; provider-agnostic brain stub | AC-3.* with a local model |
 | **M3 — Mine & miner** | `mine` + `build_miner` tools; safety confirms; ficsit.app prerelease | AC-4.*, AC-5.*; tagged prerelease on SMR |
 

@@ -1,0 +1,31 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0-m1",
+	"FriendlyName": "Unpaid Intern",
+	"Description": "FICSIT's expendable LLM-powered pioneer companion. Spawns beside you, follows orders, chats in character.",
+	"Category": "Modding",
+	"CreatedBy": "Jack Reason",
+	"CreatedByURL": "https://github.com/Jack-Reason/unpaid-intern",
+	"DocsURL": "https://github.com/Jack-Reason/unpaid-intern",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/Jack-Reason/unpaid-intern/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"Plugins": [
+		{
+			"Name": "SML",
+			"Enabled": true,
+			"SemVersion": "^3.12.0"
+		}
+	],
+	"Modules": [
+		{
+			"Name": "UnpaidIntern",
+			"Type": "Runtime",
+			"LoadingPhase": "PostDefault"
+		}
+	]
+}

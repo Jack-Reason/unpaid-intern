@@ -4,91 +4,83 @@
 
 **unpaid-intern** is an open-source, LLM-powered companion for [Satisfactory](https://www.satisfactorygame.com/): a second pioneer with a body who joins your session, chats with you in-character, follows orders, and occasionally suggests a less daft plan.
 
-**Status:** pre-alpha — repository holds the product spec and architecture only. No runnable mod yet.
+**Status:** M1 scaffold — Python brain + mock bridge are runnable and tested. The SML mod is a **source skeleton only** (not compiled; needs the Starter Project on a Windows PC).
+
+**Primary platform:** Windows 10/11.
 
 ## Sanctioned path (no piracy, no client cracks)
 
-This project targets the community-established, Coffee Stain–endorsed modding stack:
+Community stack only: [SML](https://ficsit.app/mod/SML) + [Satisfactory Mod Manager](https://smm.ficsit.app/) + [ficsit.app](https://ficsit.app). Coffee Stain does not ship first-party mod tools but heavily endorses this ecosystem ([wiki](https://satisfactory.wiki.gg/wiki/Modding)). The intern is a **mod-spawned character** inside your session — not a second Steam/Epic client.
 
-- **[Satisfactory Mod Loader (SML)](https://ficsit.app/mod/SML)** and **[Satisfactory Mod Manager](https://smm.ficsit.app/)**
-- Distribution via **[ficsit.app](https://ficsit.app)** (Satisfactory Mod Repository)
-- Development against the official [Satisfactory Modding docs](https://docs.ficsit.app/satisfactory-modding/latest/) and the [Starter Project](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/StarterProject/ObtainStarterProject.html)
+| Piece | Version |
+| --- | --- |
+| Satisfactory | **1.2** (CL ≥ 491125) |
+| SML | **3.12.0** |
+| Engine (modding) | Custom **UE 5.6.1** (CSS + community) |
+| Audio | **Wwise 2025.1.6.x** |
 
-Coffee Stain does **not** ship official first-party mod tools, but has repeatedly said they love and heavily endorse the modding community ([wiki: Modding](https://satisfactory.wiki.gg/wiki/Modding); [CSS livestream Q&A, Feb 2026](https://archive.satisfactory.video/transcriptions/2026-02-17/q-a-any-native-support-for-any-of-the-circuitry-mod-features-planned/)). We will not redistribute game assets, crack DRM, or require a second Steam/Epic licence for a fake "second player." The intern is a **mod-spawned character** puppeted inside *your* session.
-
-Target game / loader (as of research date 2026-10-30):
-
-| Piece | Version | Source |
-| --- | --- | --- |
-| Satisfactory | **1.2** (CL ≥ 491125) | [SML 3.12.0 release notes](https://github.com/satisfactorymodding/SatisfactoryModLoader/releases/tag/v3.12.0) |
-| SML | **3.12.0** | [ficsit.app/mod/SML](https://ficsit.app/mod/SML) |
-| Engine (modding) | Custom **UE 5.6.1** (CSS + community) | [docs: Required Software](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/dependencies.html) |
-| Audio | **Wwise 2025.1.6.x** | same docs |
-
-## MVP (chosen)
-
-The intern:
-
-1. **Spawns** beside the host player
-2. **Follows** the player
-3. **Chats** in character via in-game chat (witty unpaid FICSIT contractor)
-4. **Mines** resource nodes on command
-5. **Builds miners** on nodes on command
-
-Full acceptance criteria live in [`docs/SPEC.md`](docs/SPEC.md).
-
-## Architecture overview
-
-Three cooperating processes. The game stays authoritative; the LLM never touches disk or network except through the bridge's tool API.
+## Architecture
 
 ```mermaid
 flowchart LR
   Player["Player<br/>(in-game chat)"]
-  Mod["SML Mod<br/>unpaid-intern<br/>(body + sensors + actuators)"]
-  Bridge["Local Bridge<br/>(localhost WS/HTTP)"]
-  Brain["LLM Brain<br/>(provider-agnostic)"]
+  Mod["SML Mod<br/>UnpaidIntern<br/>(body + sensors + actuators)"]
+  Bridge["Local Bridge<br/>127.0.0.1 only"]
+  Brain["LLM Brain<br/>Ollama default / BYO OpenAI-compat"]
 
   Player <-->|"chat / orders"| Mod
-  Mod <-->|"observations + actions"| Bridge
-  Bridge <-->|"tool / action calls<br/>+ replies"| Brain
+  Mod <-->|"/observe /action"| Bridge
+  Bridge <-->|"tool calls"| Brain
 ```
 
-| Layer | Responsibility |
-| --- | --- |
-| **SML mod** | Spawn/control the pioneer-like body; read nearby nodes & player pose; execute `follow`, `goto`, `mine`, `build_miner`, `say`; forward chat; never call cloud LLMs itself |
-| **Local bridge** | Bind to `localhost` only by default; translate game events ↔ brain tool calls; enforce safety (confirm destructive actions, rate limits) |
-| **LLM brain** | Persona + planning; provider-agnostic (OpenAI-compatible HTTP, Anthropic, local Ollama/LM Studio, etc.); emits structured tool calls only |
+## Quickstart (Windows PowerShell) — brain only
 
-Precedents that prove the external-process pattern is normal in this community:
+```powershell
+cd path\to\unpaid-intern
+.\scripts\Setup-Brain.ps1
+.\scripts\Run-Tests.ps1
+.\scripts\Run-Brain.ps1 -Mode mock
+```
 
-- **[Ficsit Remote Monitoring (FRM)](https://docs.ficsit.app/ficsitremotemonitoring/latest/)** — HTTP + WebSocket on localhost, including [`getChatMessages`](https://docs.ficsit.app/ficsitremotemonitoring/latest/json/json.html) and [`sendChatMessage`](https://docs.ficsit.app/ficsitremotemonitoring/latest/json/Write/sendChatMessage.html)
-- **[FicsIt-Networks](https://docs.ficsit.app/ficsit-networks/latest/)** — in-game computers with Internet Card HTTP
-- **[Spawn Mob With Websocket](https://ficsit.app/mod/9RvQQM81Sbcrht)** — spawn mobs driven by an external WebSocket client
+Environment (optional cloud):
 
-## Repo layout (planned)
+```powershell
+$env:INTERN_LLM_PROVIDER = "openai"   # default is ollama
+$env:OPENAI_API_KEY = "sk-..."
+$env:OPENAI_BASE_URL = "https://api.openai.com/v1"
+$env:OPENAI_MODEL = "gpt-4o-mini"
+```
+
+Against a future live mod bridge: `.\scripts\Run-Brain.ps1 -Mode loop -Bridge http://127.0.0.1:8765`
+
+## Repo layout
 
 ```
 unpaid-intern/
-├── README.md
-├── LICENSE                 # MIT, 2026 Jack Reason
-├── CONTRIBUTING.md
-├── docs/
-│   └── SPEC.md             # goals, MVP, API, milestones
-├── mod/                    # SML plugin (C++/Blueprint) — TBD
-├── bridge/                 # local WS/HTTP bridge — TBD
-└── brain/                  # LLM agent runtime — TBD
+├── Mod/UnpaidIntern/     # SML plugin skeleton (NOT compiled yet)
+├── brain/                # Python 3.11+ brain + mock game + tests
+├── scripts/*.ps1         # Windows setup / run / test
+├── docs/SPEC.md
+└── .github/workflows/ci.yml   # windows-latest: ruff + pytest
 ```
 
-## Multiplayer / dedicated servers
+## MVP scope
 
-SML mods can run on Windows/Linux dedicated servers ([docs](https://docs.ficsit.app/satisfactory-modding/latest/ForUsers/DedicatedServerSetup.html)). For MVP we target **listen-host / single-player** first: the intern exists on the host where the mod + bridge + brain run. Joining clients would see the body if the mod is installed server-side; a vanilla client cannot join a modded dedicated server. Exact replication rules for a puppet pioneer are an open research item (see SPEC).
+Spawn beside player → follow → chat in character → mine nodes → build miners (materials from **intern inventory**; command-only chat by default). Full acceptance criteria: [`docs/SPEC.md`](docs/SPEC.md).
 
-## Contributing
+## Milestones
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). Please keep discussion constructive and stay on the sanctioned SML/ficsit.app path.
+| ID | Goal | State |
+| --- | --- | --- |
+| M0 | Spec & licence on GitHub | Done |
+| M1 | Scaffold: mod skeleton + brain/mock + CI | This tree |
+| M2 | Chat loop with live persona against local model | Next (needs compiled mod or richer mock) |
+| M3 | Mine + build_miner end-to-end; ficsit.app prerelease | Later |
+
+## Compiling the mod (Jack's Windows PC)
+
+See [`Mod/UnpaidIntern/README.md`](Mod/UnpaidIntern/README.md). Short version: install VS 2022 + CSS UE 5.6.1 + Wwise → clone Starter Project for SML 3.12 → copy `Mod/UnpaidIntern` into `Mods/` → Generate VS project → Development Editor → Blueprint GameWorldModule + `/intern` chat command → Alpakit.
 
 ## Licence
 
-[MIT](LICENSE) © 2026 Jack Reason.
-
-Satisfactory is a trademark of Coffee Stain Studios. This project is unofficial and not affiliated with Coffee Stain or Krafton.
+[MIT](LICENSE) © 2026 Jack Reason. Unofficial; Satisfactory © Coffee Stain / Krafton.
