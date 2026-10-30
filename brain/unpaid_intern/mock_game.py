@@ -61,9 +61,12 @@ class MockGameState:
         if name == "follow":
             self.observation.intern.job = "follow"
             return {"ok": True}
-        if name == "hold" or name == "cancel":
+        if name == "hold":
             self.observation.intern.job = "hold"
             return {"ok": True}
+        if name == "cancel":
+            self.observation.intern.job = "idle"
+            return {"ok": True, "cancelled": True}
         if name == "goto":
             self.observation.intern.job = "goto"
             if self.observation.intern.location:

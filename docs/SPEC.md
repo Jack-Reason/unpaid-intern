@@ -2,6 +2,7 @@
 
 **Last updated:** 2026-10-30 (Australia/Sydney)  
 **Status:** living draft  
+**Companion docs:** [ARCHITECTURE.md](ARCHITECTURE.md) · [REUSE.md](REUSE.md) · [TEST-PLAN.md](TEST-PLAN.md) · [adr/](adr/)  
 **Game target:** Satisfactory **1.2** (CL ≥ 491125) + **SML 3.12.0**  
 **Primary platform:** Windows 10/11 (PowerShell scripts, Windows paths). Linux dedicated server is nice-to-have only.
 

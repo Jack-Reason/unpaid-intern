@@ -60,13 +60,13 @@ unpaid-intern/
 ├── Mod/UnpaidIntern/     # SML plugin skeleton (NOT compiled yet)
 ├── brain/                # Python 3.11+ brain + mock game + tests
 ├── scripts/*.ps1         # Windows setup / run / test
-├── docs/SPEC.md
-└── scripts/Run-Tests.ps1      # local ruff + pytest (GHA workflow pending oauth workflow scope)
+├── docs/                  # SPEC, ARCHITECTURE, REUSE, TEST-PLAN, ADRs
+└── scripts/Run-Tests.ps1  # local ruff + pytest (GHA pending workflow OAuth scope)
 ```
 
 ## MVP scope
 
-Spawn beside player → follow → chat in character → mine nodes → build miners (materials from **intern inventory**; command-only chat by default). Full acceptance criteria: [`docs/SPEC.md`](docs/SPEC.md).
+Spawn beside player → follow → chat in character → mine nodes → build miners (materials from **intern inventory**; command-only chat by default). Full acceptance criteria: [`docs/SPEC.md`](docs/SPEC.md). Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · Reuse: [`docs/REUSE.md`](docs/REUSE.md) · Tests: [`docs/TEST-PLAN.md`](docs/TEST-PLAN.md).
 
 ## Milestones
 
