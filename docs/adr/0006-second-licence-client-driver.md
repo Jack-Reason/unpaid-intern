@@ -1,6 +1,6 @@
 # ADR-0006: Second licence, client-side driver mod
 
-- **Status:** Accepted (2026-10-30, Australia/Sydney) — **supersedes ADR-0002**
+- **Status:** Accepted (2026-10-30, Australia/Sydney) — **supersedes ADR-0002**; residual storefront automation ToS risk accepted by owner (see Risk acceptance)
 - **Deciders:** Jack Reason (product) — architect research attached
 
 ## Context
@@ -95,8 +95,24 @@ Exact FG symbol names are pinned when the Starter Project headers are available 
 
 - Pros: true co-op pioneer; Jack installs nothing; build gun / inventory / chat are vanilla-shaped; brain architecture unchanged.
 - Cons: **second licence cost**; dual-client hardware cost; **ToS automation residual risk**; driver must reverse FG input/build-gun carefully; client-only limits (no server-authoritative cheats from the mod).
-- Follow-ups: pin FG API names in Starter Project; Jack ToS ack; choose Steam+Epic vs 2PC; decide private-session-only distribution language on ficsit.app.
+- Follow-ups: pin FG API names in Starter Project; choose Steam+Epic vs 2PC (hardware); decide private-session-only distribution language on ficsit.app. ToS residual risk: **accepted** (see below).
 
 ## Supersedes
 
 - [ADR-0002](0002-intern-pawn-ai.md) — Simplified intern pawn + AIController
+
+## Risk acceptance
+
+**Date:** 30 Oct 2026 (Australia/Sydney)  
+**Owner:** Jack Reason  
+
+Jack **accepted** the residual Steam Subscriber Agreement / Epic Games Terms risk that a client-side automation driver on a second paid pioneer may be read as “Automation” / “bot software” under storefront ToS. There is **no** written CSS/Steam/Epic exemption for this use case; acceptance is a product decision, not legal advice.
+
+**Mitigations kept in force:**
+
+1. **Separate paid licence** — intern runs on its own Steam or Epic account that owns Satisfactory; no free-to-play / shared-licence tricks.
+2. **No credential sharing** — Jack and intern each use their own account credentials (Epic ToS).
+3. **Private sessions only** — friends / private / IP listen sessions; not public matchmaking, ladders, or reward farming.
+4. **README storefront-terms notice** — users are told to read their Steam/Epic terms before running the driver; see root `README.md`.
+
+Distribution and ficsit.app copy must keep the same private-session framing.

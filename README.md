@@ -83,10 +83,20 @@ Second licence joins Jack → follow (input drive) → chat in character → min
 
 ## Compiling the driver (Jack's Windows PC)
 
-See [`Mod/UnpaidIntern/README.md`](Mod/UnpaidIntern/README.md). Install VS 2022 + CSS UE 5.6.1 + Wwise → Starter Project for SML 3.12 → copy mod → Alpakit for **Windows client** (intern). Confirm `RequiredOnRemote: false` in the uplugin.
+Full verified steps: [`docs/WINDOWS-SETUP.md`](docs/WINDOWS-SETUP.md). Short path: [`Mod/UnpaidIntern/README.md`](Mod/UnpaidIntern/README.md). VS 2022 + CSS UE 5.6.1 + Wwise → Starter Project tag `v3.12.0` → copy `Mod/UnpaidIntern` → Alpakit **Windows client** (intern only). Confirm `RequiredOnRemote: false` in the uplugin.
 
 ## Licence
 
 [MIT](LICENSE) © 2026 Jack Reason. Unofficial; Satisfactory © Coffee Stain / Krafton.
 
-**ToS note:** driving a pioneer with a client-side automation mod touches Steam/Epic automation language — see [ADR-0006](docs/adr/0006-second-licence-client-driver.md). Private session + second paid licence; Jack accepts residual risk.
+## Storefront terms (read before you run this)
+
+Driving a pioneer with a client-side input/automation mod can conflict with **Steam** and **Epic** automation / bot clauses. Coffee Stain endorses the SML/ficsit.app ecosystem for mods; that is **not** a written exemption for bots.
+
+**Do this only if you have read your own storefront terms and accept the residual risk.** Owner mitigations (see [ADR-0006](docs/adr/0006-second-licence-client-driver.md) Risk acceptance, accepted 30 Oct 2026 Australia/Sydney):
+
+- Second **paid** Satisfactory licence on a separate account (no credential sharing).
+- **Private** sessions only (friends / private / IP listen — not public matchmaking or rewards).
+- Driver + SML on the **intern client only**; Jack stays vanilla.
+
+Windows compile + dual-client setup: [`docs/WINDOWS-SETUP.md`](docs/WINDOWS-SETUP.md).
