@@ -61,7 +61,7 @@ unpaid-intern/
 ├── brain/                # Python 3.11+ brain + mock game + tests
 ├── scripts/*.ps1         # Windows setup / run / test
 ├── docs/SPEC.md
-└── .github/workflows/ci.yml   # windows-latest: ruff + pytest
+└── scripts/Run-Tests.ps1      # local ruff + pytest (GHA workflow pending oauth workflow scope)
 ```
 
 ## MVP scope
@@ -73,7 +73,7 @@ Spawn beside player → follow → chat in character → mine nodes → build mi
 | ID | Goal | State |
 | --- | --- | --- |
 | M0 | Spec & licence on GitHub | Done |
-| M1 | Scaffold: mod skeleton + brain/mock + CI | This tree |
+| M1 | Scaffold: mod skeleton + brain/mock + tests | This tree (GHA CI pending) |
 | M2 | Chat loop with live persona against local model | Next (needs compiled mod or richer mock) |
 | M3 | Mine + build_miner end-to-end; ficsit.app prerelease | Later |
 
