@@ -1,0 +1,75 @@
+# Unreal Engine / Satisfactory Starter Project
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+.vs/
+.vscode/
+.idea/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.xcodeproj
+*.xcworkspace
+*.user
+*.userprefs
+
+# Packaged / staged mods (Alpakit output)
+Saved/StagedBuilds/
+*.zip
+*.smod
+
+# Wwise generated
+*.wwu.bak
+.WwiseProject/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Python brain / bridge
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Node (if a JS bridge is added later)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Local secrets / API keys
+secrets/
+*.pem
+*.key
+credentials.json
+
+# Logs and local state
+*.log
+logs/
+.bridge-state/
+.intern-state/
+
+# Local clones of the SML Starter Project (keep out of this repo)
+SatisfactoryModLoader/
+FactoryGame/
+UnrealEngine-CSS/
